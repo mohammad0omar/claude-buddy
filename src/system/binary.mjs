@@ -96,7 +96,7 @@ export function patchBinary(binaryPath, oldSalt, newSalt) {
     throw new Error(`Could not find salt "${oldSalt}" in binary at ${binaryPath}`);
   }
 
-  const backupPath = binaryPath + '.claude-pet-bak';
+  const backupPath = binaryPath + '.claude_buddy-bak';
   if (!existsSync(backupPath)) {
     copyFileSync(binaryPath, backupPath);
   }
@@ -106,7 +106,7 @@ export function patchBinary(binaryPath, oldSalt, newSalt) {
     replacement.copy(buf, offset);
   }
 
-  const tmpPath = binaryPath + '.claude-pet-tmp';
+  const tmpPath = binaryPath + '.claude_buddy-tmp';
   try {
     writeFileSync(tmpPath, buf);
     if (!IS_WIN) chmodSync(tmpPath, statSync(binaryPath).mode);

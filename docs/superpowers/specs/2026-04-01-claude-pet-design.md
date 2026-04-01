@@ -1,14 +1,14 @@
-# claude-pet Design Spec
+# claude_buddy Design Spec
 
 ## Overview
 
-claude-pet is a pure Node.js CLI tool that lets users customize their Claude Code companion pet. It works via `npx claude-pet` on any machine with Node 18+ — no Bun, no native addons.
+claude_buddy is a pure Node.js CLI tool that lets users customize their Claude Code companion pet. It works via `npx claude_buddy` on any machine with Node 18+ — no Bun, no native addons.
 
 ## Goals
 
 1. **Zero dependencies beyond Node 18+** — wyhash implemented in pure JS
-2. **Zero-flag interactive mode** — just run `claude-pet` for a guided TUI
-3. **One-command install** — `npx claude-pet` works immediately
+2. **Zero-flag interactive mode** — just run `claude_buddy` for a guided TUI
+3. **One-command install** — `npx claude_buddy` works immediately
 4. **Built-in safety** — automatic backup, easy restore, clear warnings
 5. **Live preview** — see pet rendered in terminal before committing
 6. **Power-user CLI flags** — fully non-interactive mode for scripting
@@ -18,7 +18,7 @@ claude-pet is a pure Node.js CLI tool that lets users customize their Claude Cod
 The project is organized into three layers: **CLI surface**, **domain logic**, and **system operations**. Each layer depends only on the one below it.
 
 ```
-claude-pet/
+claude_buddy/
 ├── bin/
 │   └── cli.mjs                — Entry point: arg parsing, command routing
 │
@@ -40,7 +40,7 @@ claude-pet/
 │   │
 │   ├── system/                — Side-effectful operations
 │   │   ├── binary.mjs         — Binary discovery, patching, codesign
-│   │   ├── config.mjs         — Config read/write (~/.claude-pet.json)
+│   │   ├── config.mjs         — Config read/write (~/.claude_buddy.json)
 │   │   ├── claude-config.mjs  — Read Claude's own config (userId, companion)
 │   │   ├── hooks.mjs          — SessionStart hook install/remove
 │   │   └── worker.mjs         — worker_threads coordinator for salt search
@@ -190,7 +190,7 @@ Find Claude Code binary via:
 
 1. Read binary into buffer
 2. Find all occurrences of current salt (expect 3+ for original)
-3. Create backup at `<binary>.claude-pet-bak` (first time only)
+3. Create backup at `<binary>.claude_buddy-bak` (first time only)
 4. Replace all occurrences with new salt (same 15-byte length — no offset shift)
 5. Write to temp file, atomic rename to original path
 6. macOS: re-sign with `codesign --force --sign -`
@@ -198,7 +198,7 @@ Find Claude Code binary via:
 
 ### Restore
 
-`claude-pet restore`:
+`claude_buddy restore`:
 - Patches back to original salt `'friend-2026-401'`
 - Removes SessionStart hook from `~/.claude/settings.json`
 - Does NOT delete backup file (safety net)
@@ -209,12 +209,12 @@ Find Claude Code binary via:
 
 | Command | Description |
 |---------|-------------|
-| `claude-pet` | Interactive pet picker (default) |
-| `claude-pet preview` | Browse pets without applying |
-| `claude-pet current` | Show default + patched pet |
-| `claude-pet apply` | Re-apply saved pet (after Claude update) |
-| `claude-pet restore` | Restore original pet + remove hook |
-| `claude-pet rehatch` | Delete companion for fresh `/buddy` generation |
+| `claude_buddy` | Interactive pet picker (default) |
+| `claude_buddy preview` | Browse pets without applying |
+| `claude_buddy current` | Show default + patched pet |
+| `claude_buddy apply` | Re-apply saved pet (after Claude update) |
+| `claude_buddy restore` | Restore original pet + remove hook |
+| `claude_buddy rehatch` | Delete companion for fresh `/buddy` generation |
 
 ### Flags
 
@@ -237,24 +237,24 @@ Find Claude Code binary via:
 
 ```bash
 # Interactive (most users)
-npx claude-pet
+npx claude_buddy
 
 # Fully scripted
-npx claude-pet -s dragon -r legendary -e ✦ -t wizard -y
+npx claude_buddy -s dragon -r legendary -e ✦ -t wizard -y
 
 # Preview only
-npx claude-pet preview -s duck -r common
+npx claude_buddy preview -s duck -r common
 
 # After Claude Code update
-npx claude-pet apply
+npx claude_buddy apply
 
 # Undo everything
-npx claude-pet restore
+npx claude_buddy restore
 ```
 
 ## Config & Hook Management
 
-### Pet Config: `~/.claude-pet.json` (in `src/system/config.mjs`)
+### Pet Config: `~/.claude_buddy.json` (in `src/system/config.mjs`)
 
 ```json
 {
@@ -285,7 +285,7 @@ Optional SessionStart hook in `~/.claude/settings.json`:
   "hooks": {
     "SessionStart": [{
       "matcher": "",
-      "hooks": [{ "type": "command", "command": "claude-pet apply --silent" }]
+      "hooks": [{ "type": "command", "command": "claude_buddy apply --silent" }]
     }]
   }
 }
