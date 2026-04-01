@@ -1,8 +1,10 @@
 import chalk from 'chalk';
+import { select, input } from '@inquirer/prompts';
 import { ORIGINAL_SALT } from '../core/constants.mjs';
+import { DEFAULT_PERSONALITIES } from '../core/personalities.mjs';
 import { rollPet } from '../core/pet.mjs';
 import { estimateAttempts } from '../core/salt.mjs';
-import { getClaudeUserId } from '../system/claude-config.mjs';
+import { getClaudeUserId, getCompanionInfo, setCompanionField } from '../system/claude-config.mjs';
 import { findClaudeBinary, findSaltInBinary, patchBinary } from '../system/binary.mjs';
 import { loadConfig, saveConfig } from '../system/config.mjs';
 import { findSalt } from '../system/worker.mjs';
@@ -11,7 +13,7 @@ import { showPet } from '../ui/sprites.mjs';
 import { updateProgress, clearProgress } from '../ui/progress.mjs';
 import {
   selectSpecies, selectRarity, selectEye, selectHat,
-  selectStat, confirmAction,
+  selectStat, confirmAction, promptInput,
 } from '../ui/prompts.mjs';
 
 export async function runInteractive(flags) {
@@ -102,10 +104,40 @@ export async function runInteractive(flags) {
     }
   }
 
-  if (flags.name) {
-    const { setCompanionField } = await import('../system/claude-config.mjs');
-    setCompanionField('name', flags.name);
-    console.log(chalk.dim(`Renamed companion to "${flags.name}"`));
+  // Companion customization (name + personality)
+  const companion = getCompanionInfo();
+  if (companion) {
+    // Name
+    const newName = flags.name ?? await promptInput(`Rename companion? (current: "${companion.name ?? 'unnamed'}", blank to keep)`);
+    if (newName) {
+      setCompanionField('name', newName);
+      console.log(chalk.dim(`Renamed companion to "${newName}"`));
+    }
+
+    // Personality — offer to fix species mismatch
+    const speciesDefault = DEFAULT_PERSONALITIES[species];
+    const choices = [
+      { name: 'Keep current', value: 'keep' },
+      { name: `Use ${species} default: "${speciesDefault?.slice(0, 60)}..."`, value: 'default' },
+      { name: 'Write custom', value: 'custom' },
+    ];
+
+    const personalityChoice = flags.personality
+      ? 'custom'
+      : await select({ message: `Update personality to match ${species}?`, choices });
+
+    if (personalityChoice === 'default' && speciesDefault) {
+      setCompanionField('personality', speciesDefault);
+      console.log(chalk.dim('Personality updated to match species'));
+    } else if (personalityChoice === 'custom') {
+      const custom = flags.personality ?? await promptInput('Enter personality:');
+      if (custom) {
+        setCompanionField('personality', custom);
+        console.log(chalk.dim('Personality updated'));
+      }
+    }
+  } else if (flags.name) {
+    console.log(chalk.dim('No companion hatched yet. Run /buddy in Claude Code first, then re-run to customize.'));
   }
 
   console.log(chalk.bold.green('\nDone! Launch Claude Code to see your new companion.'));
