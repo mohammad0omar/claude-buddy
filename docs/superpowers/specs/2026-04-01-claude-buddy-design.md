@@ -70,7 +70,7 @@ claude-buddy/
 
 ## Core Algorithm: wyhash in Pure JS
 
-Claude Code uses wyhash v4 (final version) for companion pet generation. We implement it in pure JavaScript using BigInt arithmetic to produce bit-exact identical outputs. Reference: https://github.com/wangyi-fudan/wyhash (v4 final, `_wyhash_final_version_4`).
+Claude Code uses Bun.hash() which is Zig's Wyhash (from Zig v0.11.0-dev, as bundled in Bun). This is NOT the reference wyhash v4 — it uses 32-byte rounds (not 48), 5 primes (not 4), and a different finalization. We implement it in pure JavaScript using BigInt arithmetic to produce bit-exact identical outputs. Reference: Bun's `src/wyhash.zig`.
 
 ### Generation Pipeline
 
