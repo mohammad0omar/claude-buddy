@@ -92,14 +92,43 @@ Requires **Node.js 18+**. That's it.
 --silent                 Suppress output (for apply command in hooks)
 ```
 
+## Quick Templates
+
+Copy-paste one of these to get a specific pet instantly:
+
+```bash
+# Legendary dragon with wizard hat and star eyes
+claude-pet -s dragon -r legendary -e ✦ -t wizard -y
+
+# Epic cat with halo and circle eyes
+claude-pet -s cat -r epic -e ◉ -t halo -y
+
+# Rare ghost with crown and dot eyes
+claude-pet -s ghost -r rare -e · -t crown -y
+
+# Legendary axolotl with tinyduck hat
+claude-pet -s axolotl -r legendary -e ° -t tinyduck -y
+
+# Epic robot with tophat and x eyes
+claude-pet -s robot -r epic -e × -t tophat -y
+
+# Legendary octopus with propeller hat (shiny!)
+claude-pet -s octopus -r legendary -e ✦ -t propeller --shiny -y
+
+# Rare capybara with beanie and at eyes
+claude-pet -s capybara -r rare -e @ -t beanie -y
+
+# Common duck (no hat, fastest search)
+claude-pet -s duck -r common -e · -y
+```
+
+**Search times:** Common combos take <1 second. Legendary takes a few seconds. Adding `--shiny` takes 30-60 seconds.
+
 ## Examples
 
 ```bash
 # Interactive — walks you through everything
 claude-pet
-
-# Fully scripted — no prompts
-claude-pet -s dragon -r legendary -e ✦ -t wizard -y
 
 # Preview without applying
 claude-pet preview -s cat -r epic
