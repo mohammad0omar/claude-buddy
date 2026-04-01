@@ -1,10 +1,10 @@
 {
-  "name": "claude-buddy",
+  "name": "claude-pet",
   "version": "0.1.0",
   "description": "Customize your Claude Code companion pet",
   "type": "module",
   "bin": {
-    "claude-buddy": "./bin/cli.mjs"
+    "claude-pet": "./bin/cli.mjs"
   },
   "files": ["bin/", "src/"],
   "engines": { "node": ">=18" },

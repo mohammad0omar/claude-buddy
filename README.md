@@ -1,19 +1,19 @@
-# claude-buddy
+# claude-pet
 
 Choose your own Claude Code companion pet. Pick your species, rarity, eyes, hat, and stats — then apply it instantly.
 
 ```
-npx claude-buddy
+npx claude-pet
 ```
 
 No Bun required. No native addons. Just Node 18+.
 
 ## What it does
 
-Claude Code assigns you a random companion pet based on your account ID. You can't change it through normal means. claude-buddy lets you pick exactly the pet you want by finding a salt that produces your desired combination, then patching the Claude Code binary to use it.
+Claude Code assigns you a random companion pet based on your account ID. You can't change it through normal means. claude-pet lets you pick exactly the pet you want by finding a salt that produces your desired combination, then patching the Claude Code binary to use it.
 
 ```
-$ claude-buddy current
+$ claude-pet current
 
   Your default pet (original salt)
 
@@ -28,7 +28,7 @@ $ claude-buddy current
     WISDOM     ████████████░░░░░░░░ 59
     SNARK      ███░░░░░░░░░░░░░░░░░ 15
 
-$ claude-buddy -s dragon -r legendary -e ✦ -t wizard -y
+$ claude-pet -s dragon -r legendary -e ✦ -t wizard -y
 
   Searching (estimated ~8640 attempts)...
   Found in 4231 attempts (892ms)
@@ -48,8 +48,8 @@ $ claude-buddy -s dragon -r legendary -e ✦ -t wizard -y
 ## Install
 
 ```bash
-npx claude-buddy          # run directly
-npm install -g claude-buddy  # or install globally
+npx claude-pet          # run directly
+npm install -g claude-pet  # or install globally
 ```
 
 Requires **Node.js 18+**. That's it.
@@ -58,12 +58,12 @@ Requires **Node.js 18+**. That's it.
 
 | Command | What it does |
 |---------|-------------|
-| `claude-buddy` | Interactive pet picker (default) |
-| `claude-buddy preview` | Browse pets without applying |
-| `claude-buddy current` | Show your default + patched pet |
-| `claude-buddy apply` | Re-apply saved pet after Claude Code updates |
-| `claude-buddy restore` | Restore your original pet + remove hook |
-| `claude-buddy rehatch` | Delete companion for a fresh `/buddy` hatch |
+| `claude-pet` | Interactive pet picker (default) |
+| `claude-pet preview` | Browse pets without applying |
+| `claude-pet current` | Show your default + patched pet |
+| `claude-pet apply` | Re-apply saved pet after Claude Code updates |
+| `claude-pet restore` | Restore your original pet + remove hook |
+| `claude-pet rehatch` | Delete companion for a fresh `/buddy` hatch |
 
 ## Options
 
@@ -96,36 +96,36 @@ Requires **Node.js 18+**. That's it.
 
 ```bash
 # Interactive — walks you through everything
-claude-buddy
+claude-pet
 
 # Fully scripted — no prompts
-claude-buddy -s dragon -r legendary -e ✦ -t wizard -y
+claude-pet -s dragon -r legendary -e ✦ -t wizard -y
 
 # Preview without applying
-claude-buddy preview -s cat -r epic
+claude-pet preview -s cat -r epic
 
 # See what you have now
-claude-buddy current
+claude-pet current
 
 # After a Claude Code update
-claude-buddy apply
+claude-pet apply
 
 # Go back to your original pet
-claude-buddy restore
+claude-pet restore
 ```
 
 ## Auto-patch hook
 
-Claude Code updates can reset your pet. During setup, claude-buddy offers to install a `SessionStart` hook that re-applies your pet automatically (~50ms overhead). You can also install it manually:
+Claude Code updates can reset your pet. During setup, claude-pet offers to install a `SessionStart` hook that re-applies your pet automatically (~50ms overhead). You can also install it manually:
 
 ```bash
-claude-buddy apply --silent  # what the hook runs
+claude-pet apply --silent  # what the hook runs
 ```
 
 To remove the hook:
 
 ```bash
-claude-buddy restore
+claude-pet restore
 ```
 
 ## How it works
@@ -140,10 +140,10 @@ The wyhash implementation is pure JavaScript (BigInt arithmetic), tested against
 
 ## Safety
 
-- Creates a backup of the Claude Code binary before patching (`<binary>.claude-buddy-bak`)
+- Creates a backup of the Claude Code binary before patching (`<binary>.claude-pet-bak`)
 - Uses atomic file writes (temp file + rename) so the binary is never in a half-written state
 - Verification step confirms the new salt is present at all expected offsets
-- `claude-buddy restore` always works — patches back to the original salt
+- `claude-pet restore` always works — patches back to the original salt
 - The backup file is never deleted automatically
 
 ## License
